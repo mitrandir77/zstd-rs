@@ -19,7 +19,7 @@
 //! `experimental` feature.
 
 extern crate libc;
-extern crate zstd_sys;
+extern crate zstd_legacy_mononoke_sys;
 
 #[cfg(feature = "std")]
 extern crate std;
@@ -28,10 +28,10 @@ extern crate std;
 mod tests;
 
 /// How to compress data.
-pub use zstd_sys::ZSTD_strategy as Strategy;
+pub use zstd_legacy_mononoke_sys::ZSTD_strategy as Strategy;
 
 /// Reset directive.
-pub use zstd_sys::ZSTD_ResetDirective as ResetDirective;
+pub use zstd_legacy_mononoke_sys::ZSTD_ResetDirective as ResetDirective;
 
 #[cfg(feature = "std")]
 use std::os::raw::{c_char, c_int, c_ulonglong, c_void};
@@ -44,50 +44,50 @@ use core::ops::Deref;
 use core::ops::DerefMut;
 use core::str;
 
-// Re-define constants from zstd_sys
-pub const VERSION_MAJOR: u32 = zstd_sys::ZSTD_VERSION_MAJOR;
-pub const VERSION_MINOR: u32 = zstd_sys::ZSTD_VERSION_MINOR;
-pub const VERSION_RELEASE: u32 = zstd_sys::ZSTD_VERSION_RELEASE;
-pub const VERSION_NUMBER: u32 = zstd_sys::ZSTD_VERSION_NUMBER;
+// Re-define constants from zstd_legacy_mononoke_sys
+pub const VERSION_MAJOR: u32 = zstd_legacy_mononoke_sys::ZSTD_VERSION_MAJOR;
+pub const VERSION_MINOR: u32 = zstd_legacy_mononoke_sys::ZSTD_VERSION_MINOR;
+pub const VERSION_RELEASE: u32 = zstd_legacy_mononoke_sys::ZSTD_VERSION_RELEASE;
+pub const VERSION_NUMBER: u32 = zstd_legacy_mononoke_sys::ZSTD_VERSION_NUMBER;
 
 /// Default compression level.
 pub const CLEVEL_DEFAULT: CompressionLevel =
-    zstd_sys::ZSTD_CLEVEL_DEFAULT as CompressionLevel;
-pub const CONTENTSIZE_UNKNOWN: u64 = zstd_sys::ZSTD_CONTENTSIZE_UNKNOWN as u64;
-pub const CONTENTSIZE_ERROR: u64 = zstd_sys::ZSTD_CONTENTSIZE_ERROR as u64;
-pub const MAGICNUMBER: u32 = zstd_sys::ZSTD_MAGICNUMBER;
-pub const MAGIC_DICTIONARY: u32 = zstd_sys::ZSTD_MAGIC_DICTIONARY;
-pub const MAGIC_SKIPPABLE_START: u32 = zstd_sys::ZSTD_MAGIC_SKIPPABLE_START;
-pub const BLOCKSIZELOG_MAX: u32 = zstd_sys::ZSTD_BLOCKSIZELOG_MAX;
-pub const BLOCKSIZE_MAX: u32 = zstd_sys::ZSTD_BLOCKSIZE_MAX;
+    zstd_legacy_mononoke_sys::ZSTD_CLEVEL_DEFAULT as CompressionLevel;
+pub const CONTENTSIZE_UNKNOWN: u64 = zstd_legacy_mononoke_sys::ZSTD_CONTENTSIZE_UNKNOWN as u64;
+pub const CONTENTSIZE_ERROR: u64 = zstd_legacy_mononoke_sys::ZSTD_CONTENTSIZE_ERROR as u64;
+pub const MAGICNUMBER: u32 = zstd_legacy_mononoke_sys::ZSTD_MAGICNUMBER;
+pub const MAGIC_DICTIONARY: u32 = zstd_legacy_mononoke_sys::ZSTD_MAGIC_DICTIONARY;
+pub const MAGIC_SKIPPABLE_START: u32 = zstd_legacy_mononoke_sys::ZSTD_MAGIC_SKIPPABLE_START;
+pub const BLOCKSIZELOG_MAX: u32 = zstd_legacy_mononoke_sys::ZSTD_BLOCKSIZELOG_MAX;
+pub const BLOCKSIZE_MAX: u32 = zstd_legacy_mononoke_sys::ZSTD_BLOCKSIZE_MAX;
 #[cfg(feature = "experimental")]
-pub const WINDOWLOG_MAX_32: u32 = zstd_sys::ZSTD_WINDOWLOG_MAX_32;
+pub const WINDOWLOG_MAX_32: u32 = zstd_legacy_mononoke_sys::ZSTD_WINDOWLOG_MAX_32;
 #[cfg(feature = "experimental")]
-pub const WINDOWLOG_MAX_64: u32 = zstd_sys::ZSTD_WINDOWLOG_MAX_64;
+pub const WINDOWLOG_MAX_64: u32 = zstd_legacy_mononoke_sys::ZSTD_WINDOWLOG_MAX_64;
 #[cfg(feature = "experimental")]
-pub const WINDOWLOG_MIN: u32 = zstd_sys::ZSTD_WINDOWLOG_MIN;
+pub const WINDOWLOG_MIN: u32 = zstd_legacy_mononoke_sys::ZSTD_WINDOWLOG_MIN;
 #[cfg(feature = "experimental")]
-pub const HASHLOG_MIN: u32 = zstd_sys::ZSTD_HASHLOG_MIN;
+pub const HASHLOG_MIN: u32 = zstd_legacy_mononoke_sys::ZSTD_HASHLOG_MIN;
 #[cfg(feature = "experimental")]
-pub const CHAINLOG_MAX_32: u32 = zstd_sys::ZSTD_CHAINLOG_MAX_32;
+pub const CHAINLOG_MAX_32: u32 = zstd_legacy_mononoke_sys::ZSTD_CHAINLOG_MAX_32;
 #[cfg(feature = "experimental")]
-pub const CHAINLOG_MAX_64: u32 = zstd_sys::ZSTD_CHAINLOG_MAX_64;
+pub const CHAINLOG_MAX_64: u32 = zstd_legacy_mononoke_sys::ZSTD_CHAINLOG_MAX_64;
 #[cfg(feature = "experimental")]
-pub const CHAINLOG_MIN: u32 = zstd_sys::ZSTD_CHAINLOG_MIN;
+pub const CHAINLOG_MIN: u32 = zstd_legacy_mononoke_sys::ZSTD_CHAINLOG_MIN;
 #[cfg(feature = "experimental")]
-pub const HASHLOG3_MAX: u32 = zstd_sys::ZSTD_HASHLOG3_MAX;
+pub const HASHLOG3_MAX: u32 = zstd_legacy_mononoke_sys::ZSTD_HASHLOG3_MAX;
 #[cfg(feature = "experimental")]
-pub const SEARCHLOG_MIN: u32 = zstd_sys::ZSTD_SEARCHLOG_MIN;
+pub const SEARCHLOG_MIN: u32 = zstd_legacy_mononoke_sys::ZSTD_SEARCHLOG_MIN;
 #[cfg(feature = "experimental")]
-pub const TARGETLENGTH_MAX: u32 = zstd_sys::ZSTD_TARGETLENGTH_MAX;
+pub const TARGETLENGTH_MAX: u32 = zstd_legacy_mononoke_sys::ZSTD_TARGETLENGTH_MAX;
 #[cfg(feature = "experimental")]
-pub const TARGETLENGTH_MIN: u32 = zstd_sys::ZSTD_TARGETLENGTH_MIN;
+pub const TARGETLENGTH_MIN: u32 = zstd_legacy_mononoke_sys::ZSTD_TARGETLENGTH_MIN;
 #[cfg(feature = "experimental")]
-pub const LDM_MINMATCH_MAX: u32 = zstd_sys::ZSTD_LDM_MINMATCH_MAX;
+pub const LDM_MINMATCH_MAX: u32 = zstd_legacy_mononoke_sys::ZSTD_LDM_MINMATCH_MAX;
 #[cfg(feature = "experimental")]
-pub const LDM_MINMATCH_MIN: u32 = zstd_sys::ZSTD_LDM_MINMATCH_MIN;
+pub const LDM_MINMATCH_MIN: u32 = zstd_legacy_mononoke_sys::ZSTD_LDM_MINMATCH_MIN;
 #[cfg(feature = "experimental")]
-pub const LDM_BUCKETSIZELOG_MAX: u32 = zstd_sys::ZSTD_LDM_BUCKETSIZELOG_MAX;
+pub const LDM_BUCKETSIZELOG_MAX: u32 = zstd_legacy_mononoke_sys::ZSTD_LDM_BUCKETSIZELOG_MAX;
 
 /// Represents the compression level used by zstd.
 pub type CompressionLevel = i32;
@@ -102,7 +102,7 @@ pub type SafeResult = Result<usize, ErrorCode>;
 
 /// Returns true if code represents error.
 fn is_error(code: usize) -> bool {
-    unsafe { zstd_sys::ZSTD_isError(code) != 0 }
+    unsafe { zstd_legacy_mononoke_sys::ZSTD_isError(code) != 0 }
 }
 
 /// Parse the result code
@@ -126,21 +126,21 @@ fn ptr_mut_void(dst: &mut (impl WriteBuf + ?Sized)) -> *mut c_void {
 }
 
 pub fn version_number() -> u32 {
-    unsafe { zstd_sys::ZSTD_versionNumber() as u32 }
+    unsafe { zstd_legacy_mononoke_sys::ZSTD_versionNumber() as u32 }
 }
 
 pub fn version_string() -> &'static str {
-    unsafe { c_char_to_str(zstd_sys::ZSTD_versionString()) }
+    unsafe { c_char_to_str(zstd_legacy_mononoke_sys::ZSTD_versionString()) }
 }
 
 /// Returns the minimum (fastest) compression level supported.
 pub fn min_c_level() -> CompressionLevel {
-    unsafe { zstd_sys::ZSTD_minCLevel() as CompressionLevel }
+    unsafe { zstd_legacy_mononoke_sys::ZSTD_minCLevel() as CompressionLevel }
 }
 
 /// Returns the maximum (slowest) compression level supported.
 pub fn max_c_level() -> CompressionLevel {
-    unsafe { zstd_sys::ZSTD_maxCLevel() as CompressionLevel }
+    unsafe { zstd_legacy_mononoke_sys::ZSTD_maxCLevel() as CompressionLevel }
 }
 
 /// Wraps the `ZSTD_compress` function.
@@ -151,7 +151,7 @@ pub fn compress<C: WriteBuf + ?Sized>(
 ) -> SafeResult {
     unsafe {
         dst.write_from(|buffer, capacity| {
-            parse_code(zstd_sys::ZSTD_compress(
+            parse_code(zstd_legacy_mononoke_sys::ZSTD_compress(
                 buffer,
                 capacity,
                 ptr_void(src),
@@ -169,7 +169,7 @@ pub fn decompress<C: WriteBuf + ?Sized>(
 ) -> SafeResult {
     unsafe {
         dst.write_from(|buffer, capacity| {
-            parse_code(zstd_sys::ZSTD_decompress(
+            parse_code(zstd_legacy_mononoke_sys::ZSTD_decompress(
                 buffer,
                 capacity,
                 ptr_void(src),
@@ -183,16 +183,16 @@ pub fn decompress<C: WriteBuf + ?Sized>(
 #[deprecated(note = "Use ZSTD_getFrameContentSize instead")]
 pub fn get_decompressed_size(src: &[u8]) -> u64 {
     unsafe {
-        zstd_sys::ZSTD_getDecompressedSize(ptr_void(src), src.len()) as u64
+        zstd_legacy_mononoke_sys::ZSTD_getDecompressedSize(ptr_void(src), src.len()) as u64
     }
 }
 
 /// maximum compressed size in worst case single-pass scenario
 pub fn compress_bound(src_size: usize) -> usize {
-    unsafe { zstd_sys::ZSTD_compressBound(src_size) }
+    unsafe { zstd_legacy_mononoke_sys::ZSTD_compressBound(src_size) }
 }
 
-pub struct CCtx<'a>(*mut zstd_sys::ZSTD_CCtx, PhantomData<&'a ()>);
+pub struct CCtx<'a>(*mut zstd_legacy_mononoke_sys::ZSTD_CCtx, PhantomData<&'a ()>);
 
 impl<'a> Default for CCtx<'a> {
     fn default() -> Self {
@@ -203,7 +203,7 @@ impl<'a> Default for CCtx<'a> {
 impl CCtx<'static> {
     /// Wrap `ZSTD_createCCtx`
     pub fn create() -> Self {
-        CCtx(unsafe { zstd_sys::ZSTD_createCCtx() }, PhantomData)
+        CCtx(unsafe { zstd_legacy_mononoke_sys::ZSTD_createCCtx() }, PhantomData)
     }
 }
 
@@ -217,7 +217,7 @@ impl<'a> CCtx<'a> {
     ) -> SafeResult {
         unsafe {
             dst.write_from(|buffer, capacity| {
-                parse_code(zstd_sys::ZSTD_compressCCtx(
+                parse_code(zstd_legacy_mononoke_sys::ZSTD_compressCCtx(
                     self.0,
                     buffer,
                     capacity,
@@ -237,7 +237,7 @@ impl<'a> CCtx<'a> {
     ) -> SafeResult {
         unsafe {
             dst.write_from(|buffer, capacity| {
-                parse_code(zstd_sys::ZSTD_compress2(
+                parse_code(zstd_legacy_mononoke_sys::ZSTD_compress2(
                     self.0,
                     buffer,
                     capacity,
@@ -258,7 +258,7 @@ impl<'a> CCtx<'a> {
     ) -> SafeResult {
         unsafe {
             dst.write_from(|buffer, capacity| {
-                parse_code(zstd_sys::ZSTD_compress_usingDict(
+                parse_code(zstd_legacy_mononoke_sys::ZSTD_compress_usingDict(
                     self.0,
                     buffer,
                     capacity,
@@ -281,7 +281,7 @@ impl<'a> CCtx<'a> {
     ) -> SafeResult {
         unsafe {
             dst.write_from(|buffer, capacity| {
-                parse_code(zstd_sys::ZSTD_compress_usingCDict(
+                parse_code(zstd_legacy_mononoke_sys::ZSTD_compress_usingCDict(
                     self.0,
                     buffer,
                     capacity,
@@ -294,7 +294,7 @@ impl<'a> CCtx<'a> {
     }
 
     pub fn init(&mut self, compression_level: CompressionLevel) -> usize {
-        unsafe { zstd_sys::ZSTD_initCStream(self.0, compression_level) }
+        unsafe { zstd_legacy_mononoke_sys::ZSTD_initCStream(self.0, compression_level) }
     }
 
     /// Wraps the `ZSTD_initCStream_srcSize()` function.
@@ -306,7 +306,7 @@ impl<'a> CCtx<'a> {
         pledged_src_size: u64,
     ) -> usize {
         unsafe {
-            zstd_sys::ZSTD_initCStream_srcSize(
+            zstd_legacy_mononoke_sys::ZSTD_initCStream_srcSize(
                 self.0,
                 compression_level as c_int,
                 pledged_src_size as c_ulonglong,
@@ -323,7 +323,7 @@ impl<'a> CCtx<'a> {
         compression_level: CompressionLevel,
     ) -> SafeResult {
         let code = unsafe {
-            zstd_sys::ZSTD_initCStream_usingDict(
+            zstd_legacy_mononoke_sys::ZSTD_initCStream_usingDict(
                 self.0,
                 ptr_void(dict),
                 dict.len(),
@@ -341,13 +341,13 @@ impl<'a> CCtx<'a> {
         'b: 'a, // Dictionary outlives the stream.
     {
         let code =
-            unsafe { zstd_sys::ZSTD_initCStream_usingCDict(self.0, cdict.0) };
+            unsafe { zstd_legacy_mononoke_sys::ZSTD_initCStream_usingCDict(self.0, cdict.0) };
         parse_code(code)
     }
 
     pub fn load_dictionary(&mut self, dict: &[u8]) -> SafeResult {
         parse_code(unsafe {
-            zstd_sys::ZSTD_CCtx_loadDictionary(
+            zstd_legacy_mononoke_sys::ZSTD_CCtx_loadDictionary(
                 self.0,
                 ptr_void(dict),
                 dict.len(),
@@ -362,7 +362,7 @@ impl<'a> CCtx<'a> {
     where
         'b: 'a,
     {
-        parse_code(unsafe { zstd_sys::ZSTD_CCtx_refCDict(self.0, cdict.0) })
+        parse_code(unsafe { zstd_legacy_mononoke_sys::ZSTD_CCtx_refCDict(self.0, cdict.0) })
     }
 
     pub fn ref_prefix<'b>(&mut self, prefix: &'b [u8]) -> SafeResult
@@ -370,7 +370,7 @@ impl<'a> CCtx<'a> {
         'b: 'a,
     {
         parse_code(unsafe {
-            zstd_sys::ZSTD_CCtx_refPrefix(
+            zstd_legacy_mononoke_sys::ZSTD_CCtx_refPrefix(
                 self.0,
                 ptr_void(prefix),
                 prefix.len(),
@@ -386,7 +386,7 @@ impl<'a> CCtx<'a> {
         let mut output = output.wrap();
         let mut input = input.wrap();
         let code = unsafe {
-            zstd_sys::ZSTD_compressStream(
+            zstd_legacy_mononoke_sys::ZSTD_compressStream(
                 self.0,
                 ptr_mut(&mut output),
                 ptr_mut(&mut input),
@@ -400,12 +400,12 @@ impl<'a> CCtx<'a> {
         &mut self,
         output: &mut OutBuffer<'_, C>,
         input: &mut InBuffer,
-        end_op: zstd_sys::ZSTD_EndDirective,
+        end_op: zstd_legacy_mononoke_sys::ZSTD_EndDirective,
     ) -> SafeResult {
         let mut output = output.wrap();
         let mut input = input.wrap();
         parse_code(unsafe {
-            zstd_sys::ZSTD_compressStream2(
+            zstd_legacy_mononoke_sys::ZSTD_compressStream2(
                 self.0,
                 ptr_mut(&mut output),
                 ptr_mut(&mut input),
@@ -421,7 +421,7 @@ impl<'a> CCtx<'a> {
     ) -> SafeResult {
         let mut output = output.wrap();
         let code = unsafe {
-            zstd_sys::ZSTD_flushStream(self.0, ptr_mut(&mut output))
+            zstd_legacy_mononoke_sys::ZSTD_flushStream(self.0, ptr_mut(&mut output))
         };
         parse_code(code)
     }
@@ -433,23 +433,23 @@ impl<'a> CCtx<'a> {
     ) -> SafeResult {
         let mut output = output.wrap();
         let code =
-            unsafe { zstd_sys::ZSTD_endStream(self.0, ptr_mut(&mut output)) };
+            unsafe { zstd_legacy_mononoke_sys::ZSTD_endStream(self.0, ptr_mut(&mut output)) };
         parse_code(code)
     }
 
     pub fn sizeof(&self) -> usize {
-        unsafe { zstd_sys::ZSTD_sizeof_CCtx(self.0) }
+        unsafe { zstd_legacy_mononoke_sys::ZSTD_sizeof_CCtx(self.0) }
     }
 
     pub fn reset(&mut self, reset: ResetDirective) -> SafeResult {
-        parse_code(unsafe { zstd_sys::ZSTD_CCtx_reset(self.0, reset) })
+        parse_code(unsafe { zstd_legacy_mononoke_sys::ZSTD_CCtx_reset(self.0, reset) })
     }
 
     #[cfg(feature = "experimental")]
     #[deprecated]
     pub fn reset_cstream(&mut self, pledged_src_size: u64) -> SafeResult {
         let code = unsafe {
-            zstd_sys::ZSTD_resetCStream(
+            zstd_legacy_mononoke_sys::ZSTD_resetCStream(
                 self.0,
                 pledged_src_size as c_ulonglong,
             )
@@ -460,11 +460,11 @@ impl<'a> CCtx<'a> {
     pub fn set_parameter(&mut self, param: CParameter) -> SafeResult {
         // TODO: Until bindgen properly generates a binding for this, we'll need to do it here.
         #[cfg(feature = "experimental")]
-        use zstd_sys::ZSTD_cParameter::ZSTD_c_experimentalParam2 as ZSTD_c_format;
+        use zstd_legacy_mononoke_sys::ZSTD_cParameter::ZSTD_c_experimentalParam2 as ZSTD_c_format;
         #[cfg(feature = "experimental")]
-        use zstd_sys::ZSTD_format_e;
+        use zstd_legacy_mononoke_sys::ZSTD_format_e;
 
-        use zstd_sys::ZSTD_cParameter::*;
+        use zstd_legacy_mononoke_sys::ZSTD_cParameter::*;
         use CParameter::*;
 
         let (param, value) = match param {
@@ -506,7 +506,7 @@ impl<'a> CCtx<'a> {
         };
 
         parse_code(unsafe {
-            zstd_sys::ZSTD_CCtx_setParameter(self.0, param, value)
+            zstd_legacy_mononoke_sys::ZSTD_CCtx_setParameter(self.0, param, value)
         })
     }
 
@@ -515,7 +515,7 @@ impl<'a> CCtx<'a> {
         pledged_src_size: u64,
     ) -> SafeResult {
         parse_code(unsafe {
-            zstd_sys::ZSTD_CCtx_setPledgedSrcSize(
+            zstd_legacy_mononoke_sys::ZSTD_CCtx_setPledgedSrcSize(
                 self.0,
                 pledged_src_size as c_ulonglong,
             )
@@ -525,7 +525,7 @@ impl<'a> CCtx<'a> {
     /// Wraps the `ZSTD_getBlockSize()` function.
     #[cfg(feature = "experimental")]
     pub fn get_block_size(&self) -> usize {
-        unsafe { zstd_sys::ZSTD_getBlockSize(self.0) }
+        unsafe { zstd_legacy_mononoke_sys::ZSTD_getBlockSize(self.0) }
     }
 
     /// Wraps the `ZSTD_compressBlock()` function.
@@ -537,7 +537,7 @@ impl<'a> CCtx<'a> {
     ) -> SafeResult {
         unsafe {
             dst.write_from(|buffer, capacity| {
-                parse_code(zstd_sys::ZSTD_compressBlock(
+                parse_code(zstd_legacy_mononoke_sys::ZSTD_compressBlock(
                     self.0,
                     buffer,
                     capacity,
@@ -548,11 +548,11 @@ impl<'a> CCtx<'a> {
         }
     }
     pub fn in_size() -> usize {
-        unsafe { zstd_sys::ZSTD_CStreamInSize() }
+        unsafe { zstd_legacy_mononoke_sys::ZSTD_CStreamInSize() }
     }
 
     pub fn out_size() -> usize {
-        unsafe { zstd_sys::ZSTD_CStreamOutSize() }
+        unsafe { zstd_legacy_mononoke_sys::ZSTD_CStreamOutSize() }
     }
 }
 
@@ -563,7 +563,7 @@ pub fn create_cctx<'a>() -> CCtx<'a> {
 impl<'a> Drop for CCtx<'a> {
     fn drop(&mut self) {
         unsafe {
-            zstd_sys::ZSTD_freeCCtx(self.0);
+            zstd_legacy_mononoke_sys::ZSTD_freeCCtx(self.0);
         }
     }
 }
@@ -593,7 +593,7 @@ unsafe fn c_char_to_str(text: *const c_char) -> &'static str {
 
 pub fn get_error_name(code: usize) -> &'static str {
     unsafe {
-        let name = zstd_sys::ZSTD_getErrorName(code);
+        let name = zstd_legacy_mononoke_sys::ZSTD_getErrorName(code);
         c_char_to_str(name)
     }
 }
@@ -620,7 +620,7 @@ pub fn compress2(ctx: &mut CCtx, dst: &mut [u8], src: &[u8]) -> SafeResult {
 /// If no dictionary was used, it will most likely be `'static`.
 ///
 /// Same as `DStream`.
-pub struct DCtx<'a>(*mut zstd_sys::ZSTD_DCtx, PhantomData<&'a ()>);
+pub struct DCtx<'a>(*mut zstd_legacy_mononoke_sys::ZSTD_DCtx, PhantomData<&'a ()>);
 
 impl Default for DCtx<'_> {
     fn default() -> Self {
@@ -630,7 +630,7 @@ impl Default for DCtx<'_> {
 
 impl DCtx<'static> {
     pub fn create() -> Self {
-        DCtx(unsafe { zstd_sys::ZSTD_createDCtx() }, PhantomData)
+        DCtx(unsafe { zstd_legacy_mononoke_sys::ZSTD_createDCtx() }, PhantomData)
     }
 }
 
@@ -643,7 +643,7 @@ impl<'a> DCtx<'a> {
     ) -> SafeResult {
         unsafe {
             dst.write_from(|buffer, capacity| {
-                parse_code(zstd_sys::ZSTD_decompressDCtx(
+                parse_code(zstd_legacy_mononoke_sys::ZSTD_decompressDCtx(
                     self.0,
                     buffer,
                     capacity,
@@ -663,7 +663,7 @@ impl<'a> DCtx<'a> {
     ) -> SafeResult {
         unsafe {
             dst.write_from(|buffer, capacity| {
-                parse_code(zstd_sys::ZSTD_decompress_usingDict(
+                parse_code(zstd_legacy_mononoke_sys::ZSTD_decompress_usingDict(
                     self.0,
                     buffer,
                     capacity,
@@ -685,7 +685,7 @@ impl<'a> DCtx<'a> {
     ) -> SafeResult {
         unsafe {
             dst.write_from(|buffer, capacity| {
-                parse_code(zstd_sys::ZSTD_decompress_usingDDict(
+                parse_code(zstd_legacy_mononoke_sys::ZSTD_decompress_usingDDict(
                     self.0,
                     buffer,
                     capacity,
@@ -701,7 +701,7 @@ impl<'a> DCtx<'a> {
     ///
     /// Initializes an existing `DStream` for decompression.
     pub fn init(&mut self) -> usize {
-        unsafe { zstd_sys::ZSTD_initDStream(self.0) }
+        unsafe { zstd_legacy_mononoke_sys::ZSTD_initDStream(self.0) }
     }
 
     /// Wraps the `ZSTD_initDStream_usingDict()` function.
@@ -709,7 +709,7 @@ impl<'a> DCtx<'a> {
     #[deprecated]
     pub fn init_using_dict(&mut self, dict: &[u8]) -> SafeResult {
         let code = unsafe {
-            zstd_sys::ZSTD_initDStream_usingDict(
+            zstd_legacy_mononoke_sys::ZSTD_initDStream_usingDict(
                 self.0,
                 ptr_void(dict),
                 dict.len(),
@@ -726,14 +726,14 @@ impl<'a> DCtx<'a> {
         'b: 'a,
     {
         let code =
-            unsafe { zstd_sys::ZSTD_initDStream_usingDDict(self.0, ddict.0) };
+            unsafe { zstd_legacy_mononoke_sys::ZSTD_initDStream_usingDDict(self.0, ddict.0) };
         parse_code(code)
     }
 
     /// Wraps the `ZSTD_resetDStream()` function.
     pub fn reset(&mut self) -> SafeResult {
         let code = unsafe {
-            zstd_sys::ZSTD_DCtx_reset(
+            zstd_legacy_mononoke_sys::ZSTD_DCtx_reset(
                 self.0,
                 ResetDirective::ZSTD_reset_session_only,
             )
@@ -743,7 +743,7 @@ impl<'a> DCtx<'a> {
 
     pub fn load_dictionary(&mut self, dict: &[u8]) -> SafeResult {
         parse_code(unsafe {
-            zstd_sys::ZSTD_DCtx_loadDictionary(
+            zstd_legacy_mononoke_sys::ZSTD_DCtx_loadDictionary(
                 self.0,
                 ptr_void(dict),
                 dict.len(),
@@ -755,7 +755,7 @@ impl<'a> DCtx<'a> {
     where
         'b: 'a,
     {
-        parse_code(unsafe { zstd_sys::ZSTD_DCtx_refDDict(self.0, ddict.0) })
+        parse_code(unsafe { zstd_legacy_mononoke_sys::ZSTD_DCtx_refDDict(self.0, ddict.0) })
     }
 
     pub fn ref_prefix<'b>(&mut self, prefix: &'b [u8]) -> SafeResult
@@ -763,7 +763,7 @@ impl<'a> DCtx<'a> {
         'b: 'a,
     {
         parse_code(unsafe {
-            zstd_sys::ZSTD_DCtx_refPrefix(
+            zstd_legacy_mononoke_sys::ZSTD_DCtx_refPrefix(
                 self.0,
                 ptr_void(prefix),
                 prefix.len(),
@@ -773,11 +773,11 @@ impl<'a> DCtx<'a> {
 
     pub fn set_parameter(&mut self, param: DParameter) -> SafeResult {
         #[cfg(feature = "experimental")]
-        use zstd_sys::ZSTD_dParameter::ZSTD_d_experimentalParam1 as ZSTD_d_format;
+        use zstd_legacy_mononoke_sys::ZSTD_dParameter::ZSTD_d_experimentalParam1 as ZSTD_d_format;
         #[cfg(feature = "experimental")]
-        use zstd_sys::ZSTD_format_e;
+        use zstd_legacy_mononoke_sys::ZSTD_format_e;
 
-        use zstd_sys::ZSTD_dParameter::*;
+        use zstd_legacy_mononoke_sys::ZSTD_dParameter::*;
         use DParameter::*;
 
         let (param, value) = match param {
@@ -795,7 +795,7 @@ impl<'a> DCtx<'a> {
         };
 
         parse_code(unsafe {
-            zstd_sys::ZSTD_DCtx_setParameter(self.0, param, value)
+            zstd_legacy_mononoke_sys::ZSTD_DCtx_setParameter(self.0, param, value)
         })
     }
 
@@ -808,7 +808,7 @@ impl<'a> DCtx<'a> {
         let mut output = output.wrap();
         let mut input = input.wrap();
         let code = unsafe {
-            zstd_sys::ZSTD_decompressStream(
+            zstd_legacy_mononoke_sys::ZSTD_decompressStream(
                 self.0,
                 ptr_mut(&mut output),
                 ptr_mut(&mut input),
@@ -821,19 +821,19 @@ impl<'a> DCtx<'a> {
     ///
     /// Returns a hint for the recommended size of the input buffer for decompression.
     pub fn in_size() -> usize {
-        unsafe { zstd_sys::ZSTD_DStreamInSize() }
+        unsafe { zstd_legacy_mononoke_sys::ZSTD_DStreamInSize() }
     }
 
     /// Wraps the `ZSTD_DStreamOutSize()` function.
     ///
     /// Returns a hint for the recommended size of the output buffer for decompression.
     pub fn out_size() -> usize {
-        unsafe { zstd_sys::ZSTD_DStreamOutSize() }
+        unsafe { zstd_legacy_mononoke_sys::ZSTD_DStreamOutSize() }
     }
 
     /// Wraps the `ZSTD_sizeof_DCtx()` function.
     pub fn sizeof(&self) -> usize {
-        unsafe { zstd_sys::ZSTD_sizeof_DCtx(self.0) }
+        unsafe { zstd_legacy_mononoke_sys::ZSTD_sizeof_DCtx(self.0) }
     }
 
     /// Wraps the `ZSTD_decompressBlock()` function.
@@ -845,7 +845,7 @@ impl<'a> DCtx<'a> {
     ) -> SafeResult {
         unsafe {
             dst.write_from(|buffer, capacity| {
-                parse_code(zstd_sys::ZSTD_decompressBlock(
+                parse_code(zstd_legacy_mononoke_sys::ZSTD_decompressBlock(
                     self.0,
                     buffer,
                     capacity,
@@ -860,7 +860,7 @@ impl<'a> DCtx<'a> {
     #[cfg(feature = "experimental")]
     pub fn insert_block(&mut self, block: &[u8]) -> usize {
         unsafe {
-            zstd_sys::ZSTD_insertBlock(self.0, ptr_void(block), block.len())
+            zstd_legacy_mononoke_sys::ZSTD_insertBlock(self.0, ptr_void(block), block.len())
         }
     }
 }
@@ -873,7 +873,7 @@ pub fn create_dctx() -> DCtx<'static> {
 impl Drop for DCtx<'_> {
     fn drop(&mut self) {
         unsafe {
-            zstd_sys::ZSTD_freeDCtx(self.0);
+            zstd_legacy_mononoke_sys::ZSTD_freeDCtx(self.0);
         }
     }
 }
@@ -912,7 +912,7 @@ pub fn decompress_using_dict(
 }
 
 /// Compression dictionary.
-pub struct CDict<'a>(*mut zstd_sys::ZSTD_CDict, PhantomData<&'a ()>);
+pub struct CDict<'a>(*mut zstd_legacy_mononoke_sys::ZSTD_CDict, PhantomData<&'a ()>);
 
 impl CDict<'static> {
     pub fn create(
@@ -921,7 +921,7 @@ impl CDict<'static> {
     ) -> Self {
         CDict(
             unsafe {
-                zstd_sys::ZSTD_createCDict(
+                zstd_legacy_mononoke_sys::ZSTD_createCDict(
                     ptr_void(dict_buffer),
                     dict_buffer.len(),
                     compression_level,
@@ -940,7 +940,7 @@ impl<'a> CDict<'a> {
     ) -> Self {
         CDict(
             unsafe {
-                zstd_sys::ZSTD_createCDict_byReference(
+                zstd_legacy_mononoke_sys::ZSTD_createCDict_byReference(
                     ptr_void(dict_buffer),
                     dict_buffer.len(),
                     compression_level,
@@ -950,7 +950,7 @@ impl<'a> CDict<'a> {
         )
     }
     pub fn sizeof(&self) -> usize {
-        unsafe { zstd_sys::ZSTD_sizeof_CDict(self.0) }
+        unsafe { zstd_legacy_mononoke_sys::ZSTD_sizeof_CDict(self.0) }
     }
 }
 
@@ -965,7 +965,7 @@ pub fn create_cdict(
 impl<'a> Drop for CDict<'a> {
     fn drop(&mut self) {
         unsafe {
-            zstd_sys::ZSTD_freeCDict(self.0);
+            zstd_legacy_mononoke_sys::ZSTD_freeCDict(self.0);
         }
     }
 }
@@ -983,13 +983,13 @@ pub fn compress_using_cdict(
     cctx.compress_using_cdict(dst, src, cdict)
 }
 
-pub struct DDict<'a>(*mut zstd_sys::ZSTD_DDict, PhantomData<&'a ()>);
+pub struct DDict<'a>(*mut zstd_legacy_mononoke_sys::ZSTD_DDict, PhantomData<&'a ()>);
 
 impl DDict<'static> {
     pub fn create(dict_buffer: &[u8]) -> Self {
         DDict(
             unsafe {
-                zstd_sys::ZSTD_createDDict(
+                zstd_legacy_mononoke_sys::ZSTD_createDDict(
                     ptr_void(dict_buffer),
                     dict_buffer.len(),
                 )
@@ -1001,7 +1001,7 @@ impl DDict<'static> {
 
 impl<'a> DDict<'a> {
     pub fn sizeof(&self) -> usize {
-        unsafe { zstd_sys::ZSTD_sizeof_DDict(self.0) }
+        unsafe { zstd_legacy_mononoke_sys::ZSTD_sizeof_DDict(self.0) }
     }
 
     /// Wraps the `ZSTD_createDDict_byReference()` function.
@@ -1011,7 +1011,7 @@ impl<'a> DDict<'a> {
     pub fn create_by_reference(dict_buffer: &'a [u8]) -> Self {
         DDict(
             unsafe {
-                zstd_sys::ZSTD_createDDict_byReference(
+                zstd_legacy_mononoke_sys::ZSTD_createDDict_byReference(
                     ptr_void(dict_buffer),
                     dict_buffer.len(),
                 )
@@ -1021,7 +1021,7 @@ impl<'a> DDict<'a> {
     }
 
     pub fn get_dict_id(&self) -> u32 {
-        unsafe { zstd_sys::ZSTD_getDictID_fromDDict(self.0) as u32 }
+        unsafe { zstd_legacy_mononoke_sys::ZSTD_getDictID_fromDDict(self.0) as u32 }
     }
 }
 
@@ -1035,7 +1035,7 @@ pub fn create_ddict(dict_buffer: &[u8]) -> DDict<'static> {
 impl<'a> Drop for DDict<'a> {
     fn drop(&mut self) {
         unsafe {
-            zstd_sys::ZSTD_freeDDict(self.0);
+            zstd_legacy_mononoke_sys::ZSTD_freeDDict(self.0);
         }
     }
 }
@@ -1062,7 +1062,7 @@ pub type CStream<'a> = CCtx<'a>;
 
 /// Allocates a new `CStream`.
 pub fn create_cstream<'a>() -> CStream<'a> {
-    CCtx(unsafe { zstd_sys::ZSTD_createCStream() }, PhantomData)
+    CCtx(unsafe { zstd_legacy_mononoke_sys::ZSTD_createCStream() }, PhantomData)
 }
 
 /// Prepares an existing `CStream` for compression at the given level.
@@ -1224,12 +1224,12 @@ fn ptr_mut<B>(ptr_void: &mut B) -> *mut B {
 ///
 /// Will update the parent buffer from the C buffer on drop.
 struct OutBufferWrapper<'a, 'b: 'a, C: WriteBuf + ?Sized> {
-    buf: zstd_sys::ZSTD_outBuffer,
+    buf: zstd_legacy_mononoke_sys::ZSTD_outBuffer,
     parent: &'a mut OutBuffer<'b, C>,
 }
 
 impl<'a, 'b: 'a, C: WriteBuf + ?Sized> Deref for OutBufferWrapper<'a, 'b, C> {
-    type Target = zstd_sys::ZSTD_outBuffer;
+    type Target = zstd_legacy_mononoke_sys::ZSTD_outBuffer;
 
     fn deref(&self) -> &Self::Target {
         &self.buf
@@ -1291,7 +1291,7 @@ impl<'a, C: WriteBuf + ?Sized> OutBuffer<'a, C> {
 
     fn wrap<'b>(&'b mut self) -> OutBufferWrapper<'b, 'a, C> {
         OutBufferWrapper {
-            buf: zstd_sys::ZSTD_outBuffer {
+            buf: zstd_legacy_mononoke_sys::ZSTD_outBuffer {
                 dst: ptr_mut_void(self.dst),
                 size: self.dst.capacity(),
                 pos: self.pos,
@@ -1318,12 +1318,12 @@ impl<'a, 'b, C: WriteBuf + ?Sized> Drop for OutBufferWrapper<'a, 'b, C> {
 }
 
 struct InBufferWrapper<'a, 'b: 'a> {
-    buf: zstd_sys::ZSTD_inBuffer,
+    buf: zstd_legacy_mononoke_sys::ZSTD_inBuffer,
     parent: &'a mut InBuffer<'b>,
 }
 
 impl<'a, 'b: 'a> Deref for InBufferWrapper<'a, 'b> {
-    type Target = zstd_sys::ZSTD_inBuffer;
+    type Target = zstd_legacy_mononoke_sys::ZSTD_inBuffer;
 
     fn deref(&self) -> &Self::Target {
         &self.buf
@@ -1363,7 +1363,7 @@ impl<'a> InBuffer<'a> {
 
     fn wrap<'b>(&'b mut self) -> InBufferWrapper<'b, 'a> {
         InBufferWrapper {
-            buf: zstd_sys::ZSTD_inBuffer {
+            buf: zstd_legacy_mononoke_sys::ZSTD_inBuffer {
                 src: ptr_void(self.src),
                 size: self.src.len(),
                 pos: self.pos,
@@ -1392,7 +1392,7 @@ pub fn compress_stream2<C: WriteBuf + ?Sized>(
     cctx: &mut CCtx,
     output: &mut OutBuffer<'_, C>,
     input: &mut InBuffer,
-    end_op: zstd_sys::ZSTD_EndDirective,
+    end_op: zstd_legacy_mononoke_sys::ZSTD_EndDirective,
 ) -> SafeResult {
     cctx.compress_stream2(output, input, end_op)
 }
@@ -1467,7 +1467,7 @@ pub fn dstream_out_size() -> usize {
 /// `src` should contain at least an entire frame.
 pub fn find_frame_compressed_size(src: &[u8]) -> SafeResult {
     let code = unsafe {
-        zstd_sys::ZSTD_findFrameCompressedSize(ptr_void(src), src.len())
+        zstd_legacy_mononoke_sys::ZSTD_findFrameCompressedSize(ptr_void(src), src.len())
     };
     parse_code(code)
 }
@@ -1476,7 +1476,7 @@ pub fn find_frame_compressed_size(src: &[u8]) -> SafeResult {
 ///
 /// `src` should contain at least a frame header.
 pub fn get_frame_content_size(src: &[u8]) -> u64 {
-    unsafe { zstd_sys::ZSTD_getFrameContentSize(ptr_void(src), src.len()) }
+    unsafe { zstd_legacy_mononoke_sys::ZSTD_getFrameContentSize(ptr_void(src), src.len()) }
 }
 
 /// Wraps the `ZSTD_findDecompressedSize()` function.
@@ -1484,7 +1484,7 @@ pub fn get_frame_content_size(src: &[u8]) -> u64 {
 /// `src` should be exactly a sequence of ZSTD frames.
 #[cfg(feature = "experimental")]
 pub fn find_decompressed_size(src: &[u8]) -> u64 {
-    unsafe { zstd_sys::ZSTD_findDecompressedSize(ptr_void(src), src.len()) }
+    unsafe { zstd_legacy_mononoke_sys::ZSTD_findDecompressedSize(ptr_void(src), src.len()) }
 }
 
 /// Wraps the `ZSTD_sizeofCCtx()` function.
@@ -1531,7 +1531,7 @@ pub fn create_cdict_by_reference<'a>(
 /// Wraps the `ZSTD_isFrame()` function.
 #[cfg(feature = "experimental")]
 pub fn is_frame(buffer: &[u8]) -> u32 {
-    unsafe { zstd_sys::ZSTD_isFrame(ptr_void(buffer), buffer.len()) as u32 }
+    unsafe { zstd_legacy_mononoke_sys::ZSTD_isFrame(ptr_void(buffer), buffer.len()) as u32 }
 }
 
 /// Wraps the `ZSTD_createDDict_byReference()` function.
@@ -1545,7 +1545,7 @@ pub fn create_ddict_by_reference(dict_buffer: &[u8]) -> DDict {
 /// Wraps the `ZSTD_getDictID_fromDict()` function.
 pub fn get_dict_id_from_dict(dict: &[u8]) -> u32 {
     unsafe {
-        zstd_sys::ZSTD_getDictID_fromDict(ptr_void(dict), dict.len()) as u32
+        zstd_legacy_mononoke_sys::ZSTD_getDictID_fromDict(ptr_void(dict), dict.len()) as u32
     }
 }
 
@@ -1557,7 +1557,7 @@ pub fn get_dict_id_from_ddict(ddict: &DDict) -> u32 {
 /// Wraps the `ZSTD_getDictID_fromFrame()` function.
 pub fn get_dict_id_from_frame(src: &[u8]) -> u32 {
     unsafe {
-        zstd_sys::ZSTD_getDictID_fromFrame(ptr_void(src), src.len()) as u32
+        zstd_legacy_mononoke_sys::ZSTD_getDictID_fromFrame(ptr_void(src), src.len()) as u32
     }
 }
 
@@ -1664,7 +1664,7 @@ pub fn cctx_reset(cctx: &mut CCtx, reset: ResetDirective) -> SafeResult {
 
 /// Wraps the `ZSTD_DCtx_reset()` function.
 pub fn dctx_reset(dctx: &mut DCtx, reset: ResetDirective) -> SafeResult {
-    parse_code(unsafe { zstd_sys::ZSTD_DCtx_reset(dctx.0, reset) })
+    parse_code(unsafe { zstd_legacy_mononoke_sys::ZSTD_DCtx_reset(dctx.0, reset) })
 }
 
 /// Wraps the `ZSTD_resetCStream()` function.
@@ -1794,7 +1794,7 @@ pub fn train_from_buffer<C: WriteBuf + ?Sized>(
 
     unsafe {
         dict_buffer.write_from(|buffer, capacity| {
-            parse_code(zstd_sys::ZDICT_trainFromBuffer(
+            parse_code(zstd_legacy_mononoke_sys::ZDICT_trainFromBuffer(
                 buffer,
                 capacity,
                 ptr_void(samples_buffer),
@@ -1808,7 +1808,7 @@ pub fn train_from_buffer<C: WriteBuf + ?Sized>(
 /// Wraps the `ZSTD_getDictID_fromDict()` function.
 pub fn get_dict_id(dict_buffer: &[u8]) -> Option<u32> {
     let id = unsafe {
-        zstd_sys::ZDICT_getDictID(ptr_void(dict_buffer), dict_buffer.len())
+        zstd_legacy_mononoke_sys::ZDICT_getDictID(ptr_void(dict_buffer), dict_buffer.len())
     };
     if id > 0 {
         Some(id)
@@ -1820,7 +1820,7 @@ pub fn get_dict_id(dict_buffer: &[u8]) -> Option<u32> {
 /// Wraps the `ZSTD_getBlockSize()` function.
 #[cfg(feature = "experimental")]
 pub fn get_block_size(cctx: &CCtx) -> usize {
-    unsafe { zstd_sys::ZSTD_getBlockSize(cctx.0) }
+    unsafe { zstd_legacy_mononoke_sys::ZSTD_getBlockSize(cctx.0) }
 }
 
 /// Wraps the `ZSTD_compressBlock()` function.
@@ -1853,7 +1853,7 @@ pub fn insert_block(dctx: &mut DCtx, block: &[u8]) -> usize {
 #[cfg(feature = "experimental")]
 pub fn decompress_bound(data: &[u8]) -> Result<u64, ErrorCode> {
     let bound =
-        unsafe { zstd_sys::ZSTD_decompressBound(ptr_void(data), data.len()) };
+        unsafe { zstd_legacy_mononoke_sys::ZSTD_decompressBound(ptr_void(data), data.len()) };
     if is_error(bound as usize) {
         Err(bound as usize)
     } else {

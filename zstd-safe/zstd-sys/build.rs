@@ -49,7 +49,7 @@ fn pkg_config() -> (Vec<&'static str>, Vec<PathBuf>) {
     let library = pkg_config::Config::new()
         .statik(true)
         .cargo_metadata(!cfg!(feature = "non-cargo"))
-        .probe("libzstd")
+        .probe("libzstd-legacy-mononoke")
         .expect("Can't probe for zstd in pkg-config");
     (vec!["PKG_CONFIG"], library.include_paths)
 }
@@ -156,7 +156,7 @@ fn compile_zstd() {
     enable_threading(&mut config);
 
     // Compile!
-    config.compile("libzstd.a");
+    config.compile("libzstd-legacy-mononoke.a");
 
     let src = env::current_dir().unwrap().join("zstd").join("lib");
     let dst = PathBuf::from(env::var_os("OUT_DIR").unwrap());

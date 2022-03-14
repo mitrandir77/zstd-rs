@@ -31,12 +31,12 @@ pub mod stream;
 use std::io;
 
 /// Default compression level.
-pub use zstd_safe::CLEVEL_DEFAULT as DEFAULT_COMPRESSION_LEVEL;
+pub use zstd_legacy_mononoke_safe::CLEVEL_DEFAULT as DEFAULT_COMPRESSION_LEVEL;
 
 /// The accepted range of compression levels.
 pub fn compression_level_range(
-) -> std::ops::RangeInclusive<zstd_safe::CompressionLevel> {
-    zstd_safe::min_c_level()..=zstd_safe::max_c_level()
+) -> std::ops::RangeInclusive<zstd_legacy_mononoke_safe::CompressionLevel> {
+    zstd_legacy_mononoke_safe::min_c_level()..=zstd_legacy_mononoke_safe::max_c_level()
 }
 
 #[doc(no_inline)]
@@ -44,7 +44,7 @@ pub use crate::stream::{decode_all, encode_all, Decoder, Encoder};
 
 /// Returns the error message as io::Error based on error_code.
 fn map_error_code(code: usize) -> io::Error {
-    let msg = zstd_safe::get_error_name(code);
+    let msg = zstd_legacy_mononoke_safe::get_error_name(code);
     io::Error::new(io::ErrorKind::Other, msg.to_string())
 }
 

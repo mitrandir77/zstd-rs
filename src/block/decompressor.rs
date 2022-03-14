@@ -3,14 +3,14 @@ use crate::map_error_code;
 #[cfg(feature = "experimental")]
 use std::convert::TryInto;
 use std::io;
-use zstd_safe;
+use zstd_legacy_mononoke_safe;
 
 /// Allows to decompress independently multiple blocks of data.
 ///
 /// This reduces memory usage compared to calling `decompress` multiple times.
 #[derive(Default)]
 pub struct Decompressor {
-    context: zstd_safe::DCtx<'static>,
+    context: zstd_legacy_mononoke_safe::DCtx<'static>,
     dict: Vec<u8>,
 }
 
@@ -23,7 +23,7 @@ impl Decompressor {
     /// Creates a new zstd decompressor, using the given dictionary.
     pub fn with_dict(dict: Vec<u8>) -> Self {
         Decompressor {
-            context: zstd_safe::create_dctx(),
+            context: zstd_legacy_mononoke_safe::create_dctx(),
             dict,
         }
     }
@@ -32,7 +32,7 @@ impl Decompressor {
     ///
     /// Returns the number of bytes written, or an error if something happened
     /// (for instance if the destination buffer was too small).
-    pub fn decompress_to_buffer<C: zstd_safe::WriteBuf + ?Sized>(
+    pub fn decompress_to_buffer<C: zstd_legacy_mononoke_safe::WriteBuf + ?Sized>(
         &mut self,
         source: &[u8],
         destination: &mut C,
@@ -68,7 +68,7 @@ impl Decompressor {
     pub fn upper_bound(_data: &[u8]) -> Option<usize> {
         #[cfg(feature = "experimental")]
         {
-            let bound = zstd_safe::decompress_bound(_data).ok()?;
+            let bound = zstd_legacy_mononoke_safe::decompress_bound(_data).ok()?;
             bound.try_into().ok()
         }
         #[cfg(not(feature = "experimental"))]

@@ -3,10 +3,10 @@
 //! This module defines a `Decoder` and an `Encoder` to decode/encode streams
 //! of data using buffers.
 //!
-//! They are mostly thin wrappers around `zstd_safe::{DCtx, CCtx}`.
+//! They are mostly thin wrappers around `zstd_legacy_mononoke_safe::{DCtx, CCtx}`.
 use std::io;
 
-pub use zstd_safe::{CParameter, DParameter, InBuffer, OutBuffer, WriteBuf};
+pub use zstd_legacy_mononoke_safe::{CParameter, DParameter, InBuffer, OutBuffer, WriteBuf};
 
 use crate::dict::{DecoderDictionary, EncoderDictionary};
 use crate::map_error_code;
@@ -129,7 +129,7 @@ pub struct Status {
 
 /// An in-memory decoder for streams of data.
 pub struct Decoder<'a> {
-    context: zstd_safe::DCtx<'a>,
+    context: zstd_legacy_mononoke_safe::DCtx<'a>,
 }
 
 impl Decoder<'static> {
@@ -140,7 +140,7 @@ impl Decoder<'static> {
 
     /// Creates a new decoder initialized with the given dictionary.
     pub fn with_dictionary(dictionary: &[u8]) -> io::Result<Self> {
-        let mut context = zstd_safe::DCtx::create();
+        let mut context = zstd_legacy_mononoke_safe::DCtx::create();
         context.init();
         context
             .load_dictionary(dictionary)
@@ -157,7 +157,7 @@ impl<'a> Decoder<'a> {
     where
         'b: 'a,
     {
-        let mut context = zstd_safe::DCtx::create();
+        let mut context = zstd_legacy_mononoke_safe::DCtx::create();
         context
             .ref_ddict(dictionary.as_ddict())
             .map_err(map_error_code)?;
@@ -207,7 +207,7 @@ impl Operation for Decoder<'_> {
 
 /// An in-memory encoder for streams of data.
 pub struct Encoder<'a> {
-    context: zstd_safe::CCtx<'a>,
+    context: zstd_legacy_mononoke_safe::CCtx<'a>,
 }
 
 impl Encoder<'static> {
@@ -218,7 +218,7 @@ impl Encoder<'static> {
 
     /// Creates a new encoder initialized with the given dictionary.
     pub fn with_dictionary(level: i32, dictionary: &[u8]) -> io::Result<Self> {
-        let mut context = zstd_safe::CCtx::create();
+        let mut context = zstd_legacy_mononoke_safe::CCtx::create();
 
         context
             .set_parameter(CParameter::CompressionLevel(level))
@@ -240,7 +240,7 @@ impl<'a> Encoder<'a> {
     where
         'b: 'a,
     {
-        let mut context = zstd_safe::CCtx::create();
+        let mut context = zstd_legacy_mononoke_safe::CCtx::create();
         context
             .ref_cdict(dictionary.as_cdict())
             .map_err(map_error_code)?;
@@ -284,7 +284,7 @@ impl<'a> Operation for Encoder<'a> {
 
     fn reinit(&mut self) -> io::Result<()> {
         self.context
-            .reset(zstd_safe::ResetDirective::ZSTD_reset_session_only)
+            .reset(zstd_legacy_mononoke_safe::ResetDirective::ZSTD_reset_session_only)
             .map_err(map_error_code)?;
         Ok(())
     }

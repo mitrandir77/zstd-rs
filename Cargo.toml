@@ -5,7 +5,7 @@ documentation = "https://docs.rs/zstd"
 keywords = ["zstd", "zstandard", "compression"]
 categories = ["compression", "api-bindings"]
 license = "MIT"
-name = "zstd"
+name = "zstd-legacy-mononoke"
 repository = "https://github.com/gyscos/zstd-rs"
 version = "0.8.0+zstd.1.4.9"
 exclude = ["assets/*.zst"]
@@ -19,7 +19,7 @@ features = ["experimental"]
 travis-ci = { repository = "gyscos/zstd-rs" }
 
 [dependencies]
-zstd-safe = { path = "./zstd-safe", version = "=4.0.0", default-features = false, features=["std"]}
+zstd-legacy-mononoke-safe = { path = "./zstd-safe", version = "=4.0.0", default-features = false, features=["std"]}
 tokio-io = { version = "0.1", optional = true }
 futures = { version = "0.1", optional = true }
 
@@ -34,11 +34,11 @@ walkdir = "2.2"
 default = ["legacy"]
 tokio = ["tokio-io", "futures"]
 
-bindgen = ["zstd-safe/bindgen"]
-debug = ["zstd-safe/debug"]
-legacy = ["zstd-safe/legacy"]
-pkg-config = ["zstd-safe/pkg-config"]
+bindgen = ["zstd-legacy-mononoke-safe/bindgen"]
+debug = ["zstd-legacy-mononoke-safe/debug"]
+legacy = ["zstd-legacy-mononoke-safe/legacy"]
+pkg-config = ["zstd-legacy-mononoke-safe/pkg-config"]
 wasm = []
-zstdmt = ["zstd-safe/zstdmt"]
-experimental = ["zstd-safe/experimental"]
-thin = ["zstd-safe/thin"]
+zstdmt = ["zstd-legacy-mononoke-safe/zstdmt"]
+experimental = ["zstd-legacy-mononoke-safe/experimental"]
+thin = ["zstd-legacy-mononoke-safe/thin"]

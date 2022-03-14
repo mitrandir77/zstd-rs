@@ -1,7 +1,7 @@
 use crate::map_error_code;
 
 use std::io;
-use zstd_safe;
+use zstd_legacy_mononoke_safe;
 
 /// Allows to compress independently multiple blocks of data.
 ///
@@ -9,7 +9,7 @@ use zstd_safe;
 /// The compressed blocks are still completely independent.
 #[derive(Default)]
 pub struct Compressor {
-    context: zstd_safe::CCtx<'static>,
+    context: zstd_legacy_mononoke_safe::CCtx<'static>,
     dict: Vec<u8>,
 }
 
@@ -22,7 +22,7 @@ impl Compressor {
     /// Creates a new zstd compressor, using the given dictionary.
     pub fn with_dict(dict: Vec<u8>) -> Self {
         Compressor {
-            context: zstd_safe::create_cctx(),
+            context: zstd_legacy_mononoke_safe::create_cctx(),
             dict,
         }
     }
@@ -33,7 +33,7 @@ impl Compressor {
     /// (for instance if the destination buffer was too small).
     ///
     /// A level of `0` uses zstd's default (currently `3`).
-    pub fn compress_to_buffer<C: zstd_safe::WriteBuf + ?Sized>(
+    pub fn compress_to_buffer<C: zstd_legacy_mononoke_safe::WriteBuf + ?Sized>(
         &mut self,
         source: &[u8],
         destination: &mut C,
@@ -53,7 +53,7 @@ impl Compressor {
         level: i32,
     ) -> io::Result<Vec<u8>> {
         // We allocate a big buffer, slightly larger than the input data.
-        let buffer_len = zstd_safe::compress_bound(data.len());
+        let buffer_len = zstd_legacy_mononoke_safe::compress_bound(data.len());
         let mut buffer = Vec::with_capacity(buffer_len);
 
         self.compress_to_buffer(data, &mut buffer, level)?;

@@ -32,7 +32,7 @@ macro_rules! readwritecommon {
             include_checksum: bool,
         ) -> io::Result<()> {
             self.$readwrite.operation_mut().set_parameter(
-                zstd_safe::CParameter::ChecksumFlag(include_checksum),
+                zstd_legacy_mononoke_safe::CParameter::ChecksumFlag(include_checksum),
             )
         }
 
@@ -48,7 +48,7 @@ macro_rules! readwritecommon {
         pub fn multithread(&mut self, n_workers: u32) -> io::Result<()> {
             self.$readwrite
                 .operation_mut()
-                .set_parameter(zstd_safe::CParameter::NbWorkers(n_workers))
+                .set_parameter(zstd_legacy_mononoke_safe::CParameter::NbWorkers(n_workers))
         }
 
         /// Enables or disables storing of the dict id.
@@ -60,7 +60,7 @@ macro_rules! readwritecommon {
             include_dictid: bool,
         ) -> io::Result<()> {
             self.$readwrite.operation_mut().set_parameter(
-                zstd_safe::CParameter::DictIdFlag(include_dictid),
+                zstd_legacy_mononoke_safe::CParameter::DictIdFlag(include_dictid),
             )
         }
 
@@ -70,7 +70,7 @@ macro_rules! readwritecommon {
             include_contentsize: bool,
         ) -> io::Result<()> {
             self.$readwrite.operation_mut().set_parameter(
-                zstd_safe::CParameter::ContentSizeFlag(include_contentsize),
+                zstd_legacy_mononoke_safe::CParameter::ContentSizeFlag(include_contentsize),
             )
         }
 
@@ -80,7 +80,7 @@ macro_rules! readwritecommon {
             long_distance_matching: bool,
         ) -> io::Result<()> {
             self.$readwrite.operation_mut().set_parameter(
-                zstd_safe::CParameter::EnableLongDistanceMatching(
+                zstd_legacy_mononoke_safe::CParameter::EnableLongDistanceMatching(
                     long_distance_matching,
                 ),
             )
@@ -98,10 +98,10 @@ macro_rules! readwritecommon {
         ) -> io::Result<()> {
             self.$readwrite.operation_mut().set_parameter(
                 if include_magicbytes {
-                    zstd_safe::CParameter::Format(zstd_safe::FrameFormat::One)
+                    zstd_legacy_mononoke_safe::CParameter::Format(zstd_legacy_mononoke_safe::FrameFormat::One)
                 } else {
-                    zstd_safe::CParameter::Format(
-                        zstd_safe::FrameFormat::Magicless,
+                    zstd_legacy_mononoke_safe::CParameter::Format(
+                        zstd_legacy_mononoke_safe::FrameFormat::Magicless,
                     )
                 },
             )

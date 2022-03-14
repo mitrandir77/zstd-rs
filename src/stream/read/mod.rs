@@ -6,7 +6,7 @@ use tokio_io::AsyncRead;
 
 use crate::dict::{DecoderDictionary, EncoderDictionary};
 use crate::stream::{raw, zio};
-use zstd_safe;
+use zstd_legacy_mononoke_safe;
 
 #[cfg(test)]
 #[cfg(feature = "tokio")]
@@ -31,7 +31,7 @@ pub struct Encoder<'a, R: BufRead> {
 impl<R: Read> Decoder<'static, BufReader<R>> {
     /// Creates a new decoder.
     pub fn new(reader: R) -> io::Result<Self> {
-        let buffer_size = zstd_safe::DCtx::in_size();
+        let buffer_size = zstd_legacy_mononoke_safe::DCtx::in_size();
 
         Self::with_buffer(BufReader::with_capacity(buffer_size, reader))
     }
@@ -79,7 +79,7 @@ impl<'a, R: BufRead> Decoder<'a, R> {
 
     /// Recommendation for the size of the output buffer.
     pub fn recommended_output_size() -> usize {
-        zstd_safe::DCtx::out_size()
+        zstd_legacy_mononoke_safe::DCtx::out_size()
     }
 
     #[cfg(feature = "experimental")]
@@ -93,10 +93,10 @@ impl<'a, R: BufRead> Decoder<'a, R> {
         self.reader
             .operation_mut()
             .set_parameter(if include_magicbytes {
-                zstd_safe::DParameter::Format(zstd_safe::FrameFormat::One)
+                zstd_legacy_mononoke_safe::DParameter::Format(zstd_legacy_mononoke_safe::FrameFormat::One)
             } else {
-                zstd_safe::DParameter::Format(
-                    zstd_safe::FrameFormat::Magicless,
+                zstd_legacy_mononoke_safe::DParameter::Format(
+                    zstd_legacy_mononoke_safe::FrameFormat::Magicless,
                 )
             })
     }
@@ -139,7 +139,7 @@ impl<R: AsyncRead + BufRead> AsyncRead for Decoder<'_, R> {
 impl<R: Read> Encoder<'static, BufReader<R>> {
     /// Creates a new encoder.
     pub fn new(reader: R, level: i32) -> io::Result<Self> {
-        let buffer_size = zstd_safe::CCtx::in_size();
+        let buffer_size = zstd_legacy_mononoke_safe::CCtx::in_size();
 
         Self::with_buffer(BufReader::with_capacity(buffer_size, reader), level)
     }
@@ -185,7 +185,7 @@ impl<'a, R: BufRead> Encoder<'a, R> {
 
     /// Recommendation for the size of the output buffer.
     pub fn recommended_output_size() -> usize {
-        zstd_safe::CCtx::out_size()
+        zstd_legacy_mononoke_safe::CCtx::out_size()
     }
 
     /// Acquire a reference to the underlying reader.

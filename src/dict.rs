@@ -20,7 +20,7 @@ use std::fs;
 use std::io::{self, Read};
 use std::path;
 
-pub use zstd_safe::{CDict, DDict};
+pub use zstd_legacy_mononoke_safe::{CDict, DDict};
 
 /// Prepared dictionary for compression
 pub struct EncoderDictionary<'a> {
@@ -33,7 +33,7 @@ impl EncoderDictionary<'static> {
     /// This will copy the dictionary internally.
     pub fn copy(dictionary: &[u8], level: i32) -> Self {
         Self {
-            cdict: zstd_safe::create_cdict(dictionary, level),
+            cdict: zstd_legacy_mononoke_safe::create_cdict(dictionary, level),
         }
     }
 }
@@ -47,7 +47,7 @@ impl<'a> EncoderDictionary<'a> {
     /// Only available with the `experimental` feature. Use `EncoderDictionary::copy` otherwise.
     pub fn new(dictionary: &'a [u8], level: i32) -> Self {
         Self {
-            cdict: zstd_safe::create_cdict_by_reference(dictionary, level),
+            cdict: zstd_legacy_mononoke_safe::create_cdict_by_reference(dictionary, level),
         }
     }
 
@@ -68,7 +68,7 @@ impl DecoderDictionary<'static> {
     /// This will copy the dictionary internally.
     pub fn copy(dictionary: &[u8]) -> Self {
         Self {
-            ddict: zstd_safe::DDict::create(dictionary),
+            ddict: zstd_legacy_mononoke_safe::DDict::create(dictionary),
         }
     }
 }
@@ -80,7 +80,7 @@ impl<'a> DecoderDictionary<'a> {
     /// Only available with the `experimental` feature. Use `DecoderDictionary::copy` otherwise.
     pub fn new(dict: &'a [u8]) -> Self {
         Self {
-            ddict: zstd_safe::create_ddict_by_reference(dict),
+            ddict: zstd_legacy_mononoke_safe::create_ddict_by_reference(dict),
         }
     }
 
@@ -108,7 +108,7 @@ pub fn from_continuous(
     }
 
     let mut result = Vec::with_capacity(max_size);
-    zstd_safe::train_from_buffer(&mut result, sample_data, sample_sizes)
+    zstd_legacy_mononoke_safe::train_from_buffer(&mut result, sample_data, sample_sizes)
         .map_err(map_error_code)?;
     Ok(result)
 }

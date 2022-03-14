@@ -6,7 +6,7 @@ use futures::Poll;
 #[cfg(feature = "tokio")]
 use tokio_io::AsyncWrite;
 
-use zstd_safe;
+use zstd_legacy_mononoke_safe;
 
 use crate::dict::{DecoderDictionary, EncoderDictionary};
 use crate::stream::{raw, zio};
@@ -214,7 +214,7 @@ impl<'a, W: Write> Encoder<'a, W> {
 
     /// Return a recommendation for the size of data to write at once.
     pub fn recommended_input_size() -> usize {
-        zstd_safe::CCtx::in_size()
+        zstd_legacy_mononoke_safe::CCtx::in_size()
     }
 
     crate::readwritecommon!(writer);
@@ -284,10 +284,10 @@ impl<'a, W: Write> Decoder<'a, W> {
         self.writer
             .operation_mut()
             .set_parameter(if include_magicbytes {
-                zstd_safe::DParameter::Format(zstd_safe::FrameFormat::One)
+                zstd_legacy_mononoke_safe::DParameter::Format(zstd_legacy_mononoke_safe::FrameFormat::One)
             } else {
-                zstd_safe::DParameter::Format(
-                    zstd_safe::FrameFormat::Magicless,
+                zstd_legacy_mononoke_safe::DParameter::Format(
+                    zstd_legacy_mononoke_safe::FrameFormat::Magicless,
                 )
             })
     }
@@ -312,7 +312,7 @@ impl<'a, W: Write> Decoder<'a, W> {
 
     /// Return a recommendation for the size of data to write at once.
     pub fn recommended_input_size() -> usize {
-        zstd_safe::DCtx::in_size()
+        zstd_legacy_mononoke_safe::DCtx::in_size()
     }
 }
 

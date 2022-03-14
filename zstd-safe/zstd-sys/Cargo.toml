@@ -12,8 +12,8 @@ keywords = [
     "compression",
 ]
 license = "MIT/Apache-2.0"
-links = "zstd"
-name = "zstd-sys"
+links = "zstd-legacy-mononoke"
+name = "zstd-legacy-mononoke-sys"
 readme = "Readme.md"
 repository = "https://github.com/gyscos/zstd-rs"
 version = "1.5.0+zstd.1.4.9"

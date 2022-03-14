@@ -1,6 +1,6 @@
 [package]
 authors = ["Alexandre Bury <alexandre.bury@gmail.com>"]
-name = "zstd-safe"
+name = "zstd-legacy-mononoke-safe"
 build = "build.rs"
 version = "4.0.0+zstd.1.4.9"
 description = "Safe low-level bindings for the zstd compression library."
@@ -14,17 +14,17 @@ readme = "Readme.md"
 features = ["experimental"]
 
 [dependencies]
-zstd-sys = { path = "./zstd-sys", version = "=1.5.0", default-features = false }
+zstd-legacy-mononoke-sys = { path = "./zstd-sys", version = "=1.5.0", default-features = false }
 libc = "0.2.21"
 
 [features]
 default = ["legacy"]
 
-bindgen = ["zstd-sys/bindgen"]
-debug = ["zstd-sys/debug"]
-experimental = ["zstd-sys/experimental"]
-legacy = ["zstd-sys/legacy"]
-pkg-config = ["zstd-sys/pkg-config"]
-std = ["zstd-sys/std"] # Use std instead of libc types - useful on wasm.
-zstdmt = ["zstd-sys/zstdmt"]
-thin = ['zstd-sys/thin']
+bindgen = ["zstd-legacy-mononoke-sys/bindgen"]
+debug = ["zstd-legacy-mononoke-sys/debug"]
+experimental = ["zstd-legacy-mononoke-sys/experimental"]
+legacy = ["zstd-legacy-mononoke-sys/legacy"]
+pkg-config = ["zstd-legacy-mononoke-sys/pkg-config"]
+std = ["zstd-legacy-mononoke-sys/std"] # Use std instead of libc types - useful on wasm.
+zstdmt = ["zstd-legacy-mononoke-sys/zstdmt"]
+thin = ['zstd-legacy-mononoke-sys/thin']
